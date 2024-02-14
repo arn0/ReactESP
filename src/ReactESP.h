@@ -7,6 +7,8 @@
 #include <functional>
 #include <queue>
 
+#include "driver/gpio.h"
+
 namespace reactesp {
 
 typedef std::function<void()> react_callback;
