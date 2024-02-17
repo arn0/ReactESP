@@ -1,7 +1,6 @@
 #include "ReactESP.h"
 
 #include <Arduino.h>
-#include <FunctionalInterrupt.h>
 #include <string.h>
 
 namespace reactesp {
