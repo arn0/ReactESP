@@ -5,15 +5,6 @@
 
 namespace reactesp {
 
-/**
- * @brief Return the current time since the device restart in microseconds
- *
- * Returns the time since the device restart. Even though the time
- * is in microseconds, a 64-bit integer is all but guaranteed not to
- * rewrap, ever.
- */
-uint64_t ICACHE_RAM_ATTR micros64() { return esp_timer_get_time(); }
-
 // Reaction classes define the behaviour of each particular
 // Reaction
 
@@ -39,22 +30,22 @@ void TimedReaction::remove(ReactESP* app) {
 
 DelayReaction::DelayReaction(uint32_t interval, const react_callback callback)
     : TimedReaction(interval, callback) {
-  this->last_trigger_time = micros64();
+  this->last_trigger_time = esp_timer_get_time();
 }
 
 DelayReaction::DelayReaction(uint64_t interval, const react_callback callback)
     : TimedReaction(interval, callback) {
-  this->last_trigger_time = micros64();
+  this->last_trigger_time = esp_timer_get_time();
 }
 
 void DelayReaction::tick() {
-  this->last_trigger_time = micros64();
+  this->last_trigger_time = esp_timer_get_time();
   this->callback();
   delete this;
 }
 
 void RepeatReaction::tick() {
-  auto now = micros64();
+  auto now = esp_timer_get_time();
   this->last_trigger_time = this->last_trigger_time + this->interval;
   if (this->last_trigger_time + this->interval < now) {
     // we're lagging more than one full interval; reset the time
@@ -119,7 +110,7 @@ void ISRReaction::remove(ReactESP* app) {
 ReactESP* ReactESP::app = NULL;
 
 void ReactESP::tickTimed() {
-  uint64_t now = micros64();
+  uint64_t now = esp_timer_get_time();
   uint64_t trigger_t;
   TimedReaction* top;
 

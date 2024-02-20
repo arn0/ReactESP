@@ -18,8 +18,6 @@ typedef void (*isr_react_callback)(void*);
 
 class ReactESP;
 
-uint64_t ICACHE_RAM_ATTR micros64();
-
 /**
  * @brief Reactions are code to be called when a given condition is fulfilled
  */
@@ -60,7 +58,7 @@ class TimedReaction : public Reaction {
    */
   TimedReaction(const uint32_t interval, const react_callback callback)
       : Reaction(callback), interval((uint64_t)1000 * (uint64_t)interval) {
-    last_trigger_time = micros64();
+    last_trigger_time = esp_timer_get_time();
     enabled = true;
   }
   /**
@@ -71,7 +69,7 @@ class TimedReaction : public Reaction {
    */
   TimedReaction(const uint64_t interval, const react_callback callback)
       : Reaction(callback), interval(interval) {
-    last_trigger_time = micros64();
+    last_trigger_time = esp_timer_get_time();
     enabled = true;
   }
 
