@@ -12,9 +12,7 @@ namespace reactesp {
  * is in microseconds, a 64-bit integer is all but guaranteed not to
  * rewrap, ever.
  */
-#ifdef ESP32
 uint64_t ICACHE_RAM_ATTR micros64() { return esp_timer_get_time(); }
-#endif
 
 // Reaction classes define the behaviour of each particular
 // Reaction
@@ -90,25 +88,20 @@ void StreamReaction::tick() {
 
 void TickReaction::tick() { this->callback(); }
 
-#ifdef ESP32
 bool ISRReaction::isr_service_installed = false;
 
 void ISRReaction::isr(void* this_ptr) {
   auto* this_ = (ISRReaction*)this_ptr;
   this_->callback();
 }
-#endif
 
 void ISRReaction::add(ReactESP* app) {
   if (app == nullptr) {
     app = ReactESP::app;
   }
 
-#ifdef ESP32
   gpio_isr_handler_add((gpio_num_t)pin_number, ISRReaction::isr, (void*)this);
-#elif defined(ESP8266)
-  attachInterrupt(digitalPinToInterrupt(pin_number), callback, mode);
-#endif
+
   app->isr_reaction_list.push_front(this);
 }
 
@@ -118,11 +111,7 @@ void ISRReaction::remove(ReactESP* app) {
   }
 
   app->isr_reaction_list.remove(this);
-#ifdef ESP32
   gpio_isr_handler_remove((gpio_num_t)pin_number);
-#elif defined(ESP8266)
-  detachInterrupt(digitalPinToInterrupt(this->pin_number));
-#endif
   delete this;
 }
 

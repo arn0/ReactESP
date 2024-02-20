@@ -18,10 +18,7 @@ typedef void (*isr_react_callback)(void*);
 
 class ReactESP;
 
-// ESP32 doesn't have the micros64 function defined
-#ifdef ESP32
 uint64_t ICACHE_RAM_ATTR micros64();
-#endif
 
 /**
  * @brief Reactions are code to be called when a given condition is fulfilled
@@ -192,11 +189,9 @@ class ISRReaction : public Reaction {
  private:
   const uint8_t pin_number;
   const int mode;
-#ifdef ESP32
   // set to true once gpio_install_isr_service is called
   static bool isr_service_installed;
   static void isr(void* arg);
-#endif
 
  public:
   /**
@@ -209,7 +204,7 @@ class ISRReaction : public Reaction {
    */
   ISRReaction(uint8_t pin_number, int mode, const react_callback callback)
       : Reaction(callback), pin_number(pin_number), mode(mode) {
-#ifdef ESP32
+
     gpio_int_type_t intr_type;
     switch (mode) {
       case RISING:
@@ -232,7 +227,6 @@ class ISRReaction : public Reaction {
       gpio_install_isr_service(ESP_INTR_FLAG_LOWMED);
       isr_service_installed = true;
     }
-#endif
   }
   virtual ~ISRReaction() {}
   void add(ReactESP* app = nullptr) override;
