@@ -2,12 +2,24 @@
 #define REACTESP_H_
 
 #include <Arduino.h>
+#include "esp_timer.h"
+#include "driver/gpio.h"
 
 #include <forward_list>
 #include <functional>
 #include <queue>
 
-#include "driver/gpio.h"
+// From arduino-esp32/cores/esp32/esp32-hal-gpio.h
+// Interrupt Modes
+#define DISABLED  0x00
+#define RISING    0x01
+#define FALLING   0x02
+#define CHANGE    0x03
+#define ONLOW     0x04
+#define ONHIGH    0x05
+#define ONLOW_WE  0x0C
+#define ONHIGH_WE 0x0D
+
 
 namespace reactesp {
 
