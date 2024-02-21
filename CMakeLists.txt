@@ -1,15 +1,15 @@
 set(COMPONENT_SRCDIRS
-    "src"
+    src
 )
 
 set(COMPONENT_ADD_INCLUDEDIRS
-    "src"
+    src
 )
 
 set(COMPONENT_REQUIRES
-     arduino-esp32-port
-    "esp_timer"
-    "driver"
+    arduino-esp32
+    esp_timer
+    driver
 )
 
 register_component()
