@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <string.h>
+#include "esp_log.h"
 
 namespace reactesp {
 
@@ -15,7 +16,7 @@ bool TimedReaction::operator<(const TimedReaction& other) {
 
 void TimedReaction::add(ReactESP* app) {
   if (app == nullptr) {
-    Serial.println("Got a null pointer in TimedReaction::add");
+    ESP_LOGE( "ReactESP", "Got a null pointer in TimedReaction::add");
     app = ReactESP::app;
   }
   app_context = app;
